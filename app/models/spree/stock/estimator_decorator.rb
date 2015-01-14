@@ -17,6 +17,7 @@ Spree::Stock::Estimator.class_eval do
   end
 
   def refresh_shipping_rates(package)
+    byebug
     logger.debug '---refreshing rates---'
     logger.debug "package: #{package.inspect}"
 
@@ -62,6 +63,7 @@ Spree::Stock::Estimator.class_eval do
   private
 
   def process_address(address)
+    byebug
     ep_address_attrs = {}
     # Stock locations do not have "company" attributes,
     ep_address_attrs[:company] = if address.respond_to?(:company)
@@ -76,6 +78,7 @@ Spree::Stock::Estimator.class_eval do
     ep_address_attrs[:state] = address.state ? address.state.abbr : address.state_name
     ep_address_attrs[:zip] = address.zipcode
     ep_address_attrs[:phone] = address.phone
+    ep_address_attrs[:country] = address.country.iso if address.country && address.country.iso
 
     ::EasyPost::Address.create(ep_address_attrs)
   end
